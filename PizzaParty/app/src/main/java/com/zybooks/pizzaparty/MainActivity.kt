@@ -96,13 +96,40 @@ fun NumberField(
 }
 
 @Composable
+@Composable
 fun RadioGroup(
     labelText: String,
     radioOptions: List<String>,
     selectedValue: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    // Not implemented yet
+    var selectedOption by remember { mutableStateOf(selectedValue) }
+    val isSelectedOption: (String) -> Boolean = { selectedOption == it }
+
+    Column {
+        Text(labelText)
+        radioOptions.forEach { option ->
+            Row(
+                modifier = modifier
+                    .selectable(
+                        selected = isSelectedOption(option),
+                        onClick = { selectedOption = option },
+                        role = Role.RadioButton
+                    )
+                    .padding(8.dp)
+            ) {
+                RadioButton(
+                    selected = isSelectedOption(option),
+                    onClick = null,
+                    modifier = modifier.padding(end = 8.dp)
+                )
+                Text(
+                    text = option,
+                    modifier = modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
