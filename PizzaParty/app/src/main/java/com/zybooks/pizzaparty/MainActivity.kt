@@ -81,7 +81,18 @@ fun NumberField(
     labelText: String,
     modifier: Modifier = Modifier
 ) {
-    // Not implemented yet
+    var textInput by remember { mutableStateOf("") }
+
+    TextField(
+        value = textInput,
+        onValueChange = { textInput = it },
+        label = { Text(labelText) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number
+        ),
+        modifier = modifier
+    )
 }
 
 @Composable
