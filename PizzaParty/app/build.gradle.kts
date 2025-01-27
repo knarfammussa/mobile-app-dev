@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.zybooks.pizzaparty"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.zybooks.pizzaparty"
