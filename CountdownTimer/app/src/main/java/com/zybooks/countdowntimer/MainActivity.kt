@@ -13,6 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
+import androidx.work.workDataOf
 import com.zybooks.countdowntimer.ui.TimerScreen
 import com.zybooks.countdowntimer.ui.TimerViewModel
 import com.zybooks.countdowntimer.ui.theme.CountdownTimerTheme
@@ -34,5 +38,25 @@ class MainActivity : ComponentActivity() {
             }
          }
       }
+   }
+
+   override fun onStop() {
+      super.onStop()
+
+      // Start TimerWorker if the timer is running
+      if (timerViewModel.isRunning) {
+         startWorker(timerViewModel.remainingMillis)
+      }
+   }
+
+   private fun startWorker(millisRemain: Long) {
+      val timerWorkRequest: WorkRequest = OneTimeWorkRequestBuilder<TimerWorker>()
+         .setInputData(
+            workDataOf(
+               KEY_MILLIS_REMAINING to millisRemain
+            )
+         ).build()
+
+      WorkManager.getInstance(applicationContext).enqueue(timerWorkRequest)
    }
 }
