@@ -130,6 +130,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         val isValid = isWordValidForCategory(word)
 
         if (isValid) {
+            // no repeats!
             usedWords.add(word.trim().lowercase())
 
             // update player score
@@ -243,12 +244,15 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
 
+            // here is the speech recognition magic
             override fun onResults(results: Bundle?) {
                 val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (!matches.isNullOrEmpty()) {
+                    // get the first/closest recognized word!
                     val word = matches[0]
                     _recognizedText.value = "\"$word\""
 
+                    // submit this word to the game and see if valid (used/inapplicable or good)
                     val isValid = submitWord(word)
                     if (!isValid) {
                         _recognizedText.value = "\"$word\" - Not valid for this category"
@@ -262,9 +266,11 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 _isSpeechRecognitionActive.value = false
             }
 
+            // more speech recognition magic!
             override fun onPartialResults(partialResults: Bundle?) {
                 val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 if (!matches.isNullOrEmpty()) {
+                    // our recognized text (closest option)
                     _recognizedText.value = "Heard: ${matches[0]}"
                 }
             }
